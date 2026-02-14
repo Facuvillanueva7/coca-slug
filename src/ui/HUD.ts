@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { Player } from '../entities/Player';
 import { WeaponSystem } from '../systems/WeaponSystem';
-import { runState } from '../systems/RunState';
+import { runState } from '../main';
 import { VehicleSystem } from '../systems/VehicleSystem';
 
 export class HUD {

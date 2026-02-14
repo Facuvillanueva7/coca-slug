@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { BaseLevelScene } from './BaseLevelScene';
-import { runState } from '../systems/RunState';
+import { runState } from '../main';
 import type { WeaponId } from '../config/weapons';
 
 export class Level1Scene extends BaseLevelScene {
