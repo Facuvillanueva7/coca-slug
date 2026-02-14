@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Player } from '../entities/Player';
-import { Enemy } from '../entities/Enemy';
+import { EnemyBase } from '../entities/EnemyBase';
 import { WeaponSystem } from '../systems/WeaponSystem';
 import { SpawnerDirector } from '../systems/SpawnerDirector';
 import { VehicleSystem } from '../systems/VehicleSystem';
@@ -8,7 +8,7 @@ import { AudioManager } from '../systems/AudioManager';
 import { CameraController } from '../systems/CameraController';
 import { ParticleFX } from '../systems/ParticleFX';
 import { HUD } from '../ui/HUD';
-import { runState } from '../main';
+import { runState } from '../state/runState';
 
 export abstract class BaseLevelScene extends Phaser.Scene {
   protected player!: Player;
@@ -37,7 +37,7 @@ export abstract class BaseLevelScene extends Phaser.Scene {
     this.semisolids.create(550, 140, 'platform-thin');
     this.semisolids.create(1300, 120, 'platform-thin');
 
-    this.enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: false });
+    this.enemies = this.physics.add.group({ classType: EnemyBase, runChildUpdate: false });
     this.audioMan = new AudioManager(this);
     this.fx = new ParticleFX(this);
     this.weapon = new WeaponSystem(this, this.audioMan, this.fx, this.enemies);
@@ -46,7 +46,9 @@ export abstract class BaseLevelScene extends Phaser.Scene {
 
     this.physics.add.collider(this.player, this.platforms);
     this.physics.add.collider(this.enemies, this.platforms);
-    this.physics.add.overlap(this.player, this.enemies, (_p, e) => this.player.takeDamage((e as Enemy).typeId.includes('llama') ? 12 : 8));
+    this.physics.add.overlap(this.player, this.enemies, (_p, e) => {
+      this.player.takeDamage((e as EnemyBase).typeId.includes('llama') ? 12 : 8);
+    });
 
     this.keys = this.input.keyboard!.addKeys({
       left: Phaser.Input.Keyboard.KeyCodes.A,
@@ -70,7 +72,10 @@ export abstract class BaseLevelScene extends Phaser.Scene {
 
   protected commonUpdate(time: number): void {
     this.player.update(this.keys as never, time);
-    this.enemies.children.each((child) => (child as Enemy).behave(this.player.x, time));
+    this.enemies.children.each((child) => {
+      (child as EnemyBase).behave(this.player.x, time);
+      return true;
+    });
 
     if (this.player.hp <= 0) {
       runState.deaths += 1;

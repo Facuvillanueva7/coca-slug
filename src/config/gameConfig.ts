@@ -1,5 +1,7 @@
-export const BASE_WIDTH = 384;
-export const BASE_HEIGHT = 216;
+export const GAME = {
+  width: 384,
+  height: 216
+} as const;
 
 export const FEEL = {
   gravity: 900,
@@ -10,10 +12,10 @@ export const FEEL = {
   invulnMs: 1000,
   shakeIntensity: 0.002,
   lookAhead: 28
-};
+} as const;
 
 export const AUDIO_DEFAULTS = {
   master: 0.8,
   sfx: 0.8,
   music: 0.5
-};
+} as const;

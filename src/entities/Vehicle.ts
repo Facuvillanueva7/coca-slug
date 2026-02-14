@@ -16,7 +16,8 @@ export class Vehicle extends Phaser.Physics.Arcade.Sprite {
     this.hp -= amount;
     if (this.hp <= 0) {
       this.setTexture('vehicleExplode');
-      this.body.enable = false;
+      const body = this.body as Phaser.Physics.Arcade.Body | null;
+      if (body) body.enable = false;
       this.scene.time.delayedCall(400, () => this.destroy());
     }
   }

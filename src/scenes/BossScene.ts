@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { BaseLevelScene } from './BaseLevelScene';
-import { runState } from '../main';
+import { runState } from '../state/runState';
 
 class Boss extends Phaser.Physics.Arcade.Sprite {
   hp = 420;

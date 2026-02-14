@@ -10,8 +10,10 @@ export class AudioManager {
   }
 
   private beep(freq: number, duration = 0.08, type: OscillatorType = 'square', volume = 0.08): void {
-    const ctx = this.scene.sound.context;
+    const soundAny = this.scene.sound as any;
+    const ctx: AudioContext | undefined = soundAny?.context;
     if (!ctx) return;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;

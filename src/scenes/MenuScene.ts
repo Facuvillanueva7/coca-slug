@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { runState } from '../main';
+import { runState } from '../state/runState';
 import { SaveManager } from '../systems/SaveManager';
 
 export class MenuScene extends Phaser.Scene {

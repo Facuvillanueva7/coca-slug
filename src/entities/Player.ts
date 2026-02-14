@@ -26,8 +26,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
   }
 
-  update(keys: { left: Phaser.Input.Keyboard.Key; right: Phaser.Input.Keyboard.Key; up: Phaser.Input.Keyboard.Key; down: Phaser.Input.Keyboard.Key; shoot: Phaser.Input.Keyboard.Key; melee: Phaser.Input.Keyboard.Key }, now: number): void {
-    const body = this.body as Phaser.Physics.Arcade.Body;
+  update(
+    keys: {
+      left: Phaser.Input.Keyboard.Key;
+      right: Phaser.Input.Keyboard.Key;
+      up: Phaser.Input.Keyboard.Key;
+      down: Phaser.Input.Keyboard.Key;
+      shoot: Phaser.Input.Keyboard.Key;
+      melee: Phaser.Input.Keyboard.Key;
+    },
+    now: number
+  ): void {
+    const body = this.body as Phaser.Physics.Arcade.Body | null;
+    if (!body) return;
+
     if (body.blocked.down) this.lastGrounded = now;
     if (Phaser.Input.Keyboard.JustDown(keys.up)) this.jumpBufferedUntil = now + FEEL.jumpBufferMs;
 
@@ -45,7 +57,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.fx.dust(this.x, this.y + 8);
     }
 
-    if (keys.down.isDown) this.setVelocityX(this.body.velocity.x * 0.75);
+    if (keys.down.isDown) this.setVelocityX(body.velocity.x * 0.75);
 
     if (keys.shoot.isDown) {
       this.weapon.requestShoot(now);
@@ -55,8 +67,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     if (Phaser.Input.Keyboard.JustDown(keys.melee)) {
       const hitbox = this.scene.add.zone(this.x + this.facing * 12, this.y, 16, 14);
       this.scene.physics.add.existing(hitbox);
-      const body2 = hitbox.body as Phaser.Physics.Arcade.Body;
-      body2.allowGravity = false;
+      const meleeBody = hitbox.body as Phaser.Physics.Arcade.Body | null;
+      if (meleeBody) meleeBody.allowGravity = false;
       this.scene.time.delayedCall(80, () => hitbox.destroy());
     }
   }
@@ -68,7 +80,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.audio.hurt();
     this.setTint(0xff7777);
     this.invulnerableUntil = now + FEEL.invulnMs;
-    this.scene.time.addEvent({ repeat: 6, delay: 120, callback: () => this.visible = !this.visible });
-    this.scene.time.delayedCall(FEEL.invulnMs, () => { this.clearTint(); this.visible = true; });
+    this.scene.time.addEvent({ repeat: 6, delay: 120, callback: () => (this.visible = !this.visible) });
+    this.scene.time.delayedCall(FEEL.invulnMs, () => {
+      this.clearTint();
+      this.visible = true;
+    });
   }
 }

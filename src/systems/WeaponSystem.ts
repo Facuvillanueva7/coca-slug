@@ -55,10 +55,14 @@ export class WeaponSystem {
       const spread = Phaser.Math.DegToRad((Math.random() - 0.5) * cfg.spreadDeg);
       const vx = Math.cos(spread) * cfg.speed * dir;
       const vy = Math.sin(spread) * cfg.speed;
-      const bullet = this.bullets.get(x + dir * 8, y, 'pixel') as Phaser.Physics.Arcade.Image;
+      const bullet = this.bullets.get(x + dir * 8, y, 'pixel') as Phaser.Physics.Arcade.Image | null;
       if (!bullet) continue;
+
       bullet.setActive(true).setVisible(true).setTint(this.weapon === 'rocket' ? 0xff7f27 : 0xffffff);
-      bullet.body.enable = true;
+      const body = bullet.body as Phaser.Physics.Arcade.Body | null;
+      if (!body) continue;
+
+      body.enable = true;
       bullet.setVelocity(vx, vy);
       bullet.setData('damage', cfg.damage);
       bullet.setData('piercing', Boolean(cfg.piercing));

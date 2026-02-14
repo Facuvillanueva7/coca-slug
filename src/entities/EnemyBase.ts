@@ -20,9 +20,11 @@ export class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     this.hp -= amount;
     this.setTintFill(0xffffff);
     this.scene.time.delayedCall(50, () => this.clearTint());
+
     if (this.hp <= 0) {
       this.setVelocity(0, -80);
-      this.body.enable = false;
+      const body = this.body as Phaser.Physics.Arcade.Body | null;
+      if (body) body.enable = false;
       this.scene.time.delayedCall(200, () => this.destroy());
     }
   }
