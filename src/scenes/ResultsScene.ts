@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import { runState } from '../state/runState';
 import { SaveManager } from '../systems/SaveManager';
+import { SCENES } from './sceneKeys';
 
 export class ResultsScene extends Phaser.Scene {
-  constructor() { super('ResultsScene'); }
+  constructor() { super(SCENES.Results); }
 
   create(): void {
     const elapsed = Math.floor((this.time.now - runState.levelStartTime) / 1000);
@@ -17,6 +18,6 @@ export class ResultsScene extends Phaser.Scene {
       { fontFamily: 'monospace', fontSize: '12px', color: '#fff' }
     );
     this.add.text(55, 160, 'ENTER: volver al menu', { fontFamily: 'monospace', fontSize: '10px', color: '#b8d0ff' });
-    this.input.keyboard!.once('keydown-ENTER', () => this.scene.start('MenuScene'));
+    this.input.keyboard!.once('keydown-ENTER', () => this.scene.start(SCENES.Menu));
   }
 }

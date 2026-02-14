@@ -1,13 +1,14 @@
 import Phaser from 'phaser';
-import { BaseLevelScene } from './BaseLevelScene';
+import { BaseLevel } from '../core/BaseLevel';
 import { runState } from '../state/runState';
 import type { WeaponId } from '../config/weapons';
+import { SCENES } from './sceneKeys';
 
-export class Level1Scene extends BaseLevelScene {
+export class Level1Scene extends BaseLevel {
   private cages!: Phaser.Physics.Arcade.StaticGroup;
   private pickups!: Phaser.Physics.Arcade.Group;
 
-  constructor() { super('Level1Scene'); }
+  constructor() { super(SCENES.Level1); }
 
   create(): void {
     this.createBase(runState.selectedCharacter === 0 ? 'char-0' : 'char-1');
@@ -24,7 +25,7 @@ export class Level1Scene extends BaseLevelScene {
         runState.score += 250;
         this.audioMan.rescue();
         const p = this.pickups.create((cage as Phaser.GameObjects.Sprite).x, (cage as Phaser.GameObjects.Sprite).y - 16, 'pickup') as Phaser.Physics.Arcade.Image;
-        p.setData('type', Phaser.Utils.Array.GetRandom(['grenade','score','weapon']));
+        p.setData('type', Phaser.Utils.Array.GetRandom(['grenade', 'score', 'weapon']));
       }
     });
 
@@ -46,6 +47,6 @@ export class Level1Scene extends BaseLevelScene {
 
   update(time: number): void {
     this.commonUpdate(time);
-    if (this.player.x > 2080) this.scene.start('Level2Scene');
+    if (this.player.x > 2080) this.scene.start(SCENES.Level2);
   }
 }

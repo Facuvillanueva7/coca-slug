@@ -1,15 +1,16 @@
 import Phaser from 'phaser';
-import { BaseLevelScene } from './BaseLevelScene';
+import { BaseLevel } from '../core/BaseLevel';
+import { SCENES } from './sceneKeys';
 
-export class Level2Scene extends BaseLevelScene {
+export class Level2Scene extends BaseLevel {
   private hazard!: Phaser.GameObjects.Zone;
 
-  constructor() { super('Level2Scene'); }
+  constructor() { super(SCENES.Level2); }
 
   create(): void {
     this.createBase('char-0');
-    const v = this.vehicle.spawn(340, 162);
-    this.physics.add.collider(v, this.platforms);
+    const vehicle = this.vehicle.spawn(340, 162);
+    this.physics.add.collider(vehicle, this.platforms);
 
     this.director.wave(520, 160, ['llamaCharge', 'shooter', 'llamaSpit']);
     this.director.wave(1080, 160, ['melee', 'lobber', 'llamaCharge']);
@@ -19,8 +20,10 @@ export class Level2Scene extends BaseLevelScene {
     this.physics.add.existing(this.hazard, true);
     this.physics.add.overlap(this.player, this.hazard, () => this.player.takeDamage(20));
 
-    this.physics.add.overlap(this.player, v, () => {
-      if (Phaser.Input.Keyboard.JustDown(this.keys.interact)) this.vehicle.mounted ? this.vehicle.dismount() : this.vehicle.mount();
+    this.physics.add.overlap(this.player, vehicle, () => {
+      if (Phaser.Input.Keyboard.JustDown(this.keys.interact)) {
+        this.vehicle.mounted ? this.vehicle.dismount() : this.vehicle.mount();
+      }
     });
 
     this.add.text(20, 16, 'Nivel 2: barrancos, vagonetas y llamas enojadas', { fontFamily: 'monospace', fontSize: '9px' }).setScrollFactor(0);
@@ -34,6 +37,6 @@ export class Level2Scene extends BaseLevelScene {
       if (Phaser.Input.Keyboard.JustDown(this.keys.up)) this.vehicle.vehicle.setVelocityY(-290);
     }
 
-    if (this.player.x > 2080) this.scene.start('BossScene');
+    if (this.player.x > 2080) this.scene.start(SCENES.Boss);
   }
 }

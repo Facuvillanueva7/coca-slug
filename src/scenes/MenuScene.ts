@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import { runState } from '../state/runState';
 import { SaveManager } from '../systems/SaveManager';
+import { SCENES } from './sceneKeys';
 
 export class MenuScene extends Phaser.Scene {
-  constructor() { super('MenuScene'); }
+  constructor() { super(SCENES.Menu); }
 
   create(): void {
     this.cameras.main.setBackgroundColor('#1f1a1d');
@@ -13,10 +14,15 @@ export class MenuScene extends Phaser.Scene {
     this.add.text(24, 154, 'P1: A/D mover, W saltar, S agachar, J disparar, K melee, L granada', { fontFamily: 'monospace', fontSize: '9px', color: '#b8d0ff' });
 
     this.input.keyboard!.on('keydown-ONE', () => {
-      runState.score = 0; runState.lives = 3; runState.grenades = 6; runState.rescues = 0; runState.deaths = 0;
+      runState.score = 0;
+      runState.lives = 3;
+      runState.grenades = 6;
+      runState.rescues = 0;
+      runState.deaths = 0;
       runState.selectedCharacter = 0;
-      this.scene.start('Level1Scene');
+      this.scene.start(SCENES.Level1);
     });
+
     this.input.keyboard!.on('keydown-TWO', () => {
       const save = SaveManager.load();
       save.audio.master = save.audio.master > 0.6 ? 0.4 : 0.8;

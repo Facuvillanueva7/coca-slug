@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { SCENES } from './sceneKeys';
 
 function makeTex(scene: Phaser.Scene, key: string, w: number, h: number, draw: (g: Phaser.GameObjects.Graphics) => void): void {
   const g = scene.add.graphics({ x: 0, y: 0 });
@@ -9,7 +10,7 @@ function makeTex(scene: Phaser.Scene, key: string, w: number, h: number, draw: (
 }
 
 export class PreloadScene extends Phaser.Scene {
-  constructor() { super('PreloadScene'); }
+  constructor() { super(SCENES.Preload); }
 
   create(): void {
     makeTex(this, 'pixel', 2, 2, (g) => g.fillStyle(0xffffff).fillRect(0, 0, 2, 2));
@@ -20,8 +21,8 @@ export class PreloadScene extends Phaser.Scene {
 
     makeTex(this, 'char-0', 16, 16, (g) => { g.fillStyle(0xf2c48d).fillRect(6, 2, 4, 4); g.fillStyle(0x27435c).fillRect(4, 6, 8, 7); g.fillStyle(0xd4af37).fillRect(3, 6, 1, 6); });
     makeTex(this, 'char-1', 16, 16, (g) => { g.fillStyle(0xf2c48d).fillRect(6, 2, 4, 4); g.fillStyle(0x5d2d79).fillRect(4, 6, 8, 7); g.fillStyle(0xd95f39).fillRect(10, 5, 3, 2); });
-    ['shooter','melee','lobber','turret','llamaCharge','llamaSpit'].forEach((k, i) => makeTex(this, `enemy-${k}`, 16, 16, (g) => {
-      const colors = [0xb1382a,0x8e2f26,0x6e247a,0x5e5e5e,0xd1d1c3,0xc7a184];
+    ['shooter', 'melee', 'lobber', 'turret', 'llamaCharge', 'llamaSpit'].forEach((k, i) => makeTex(this, `enemy-${k}`, 16, 16, (g) => {
+      const colors = [0xb1382a, 0x8e2f26, 0x6e247a, 0x5e5e5e, 0xd1d1c3, 0xc7a184];
       g.fillStyle(colors[i]).fillRect(3, 4, 10, 10);
       g.fillStyle(0x111111).fillRect(10, 6, 2, 2);
     }));
@@ -30,6 +31,6 @@ export class PreloadScene extends Phaser.Scene {
     makeTex(this, 'cage', 16, 20, (g) => { g.fillStyle(0x4d3b2a).fillRect(0, 0, 16, 20); g.fillStyle(0xbcbcbc).fillRect(2, 2, 2, 16); g.fillRect(7, 2, 2, 16); g.fillRect(12, 2, 2, 16); });
     makeTex(this, 'pickup', 8, 8, (g) => { g.fillStyle(0xfff200).fillRect(0, 0, 8, 8); });
 
-    this.scene.start('MenuScene');
+    this.scene.start(SCENES.Menu);
   }
 }

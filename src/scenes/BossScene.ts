@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
-import { BaseLevelScene } from './BaseLevelScene';
+import { BaseLevel } from '../core/BaseLevel';
 import { runState } from '../state/runState';
+import { SCENES } from './sceneKeys';
 
 class Boss extends Phaser.Physics.Arcade.Sprite {
   hp = 420;
   phase = 1;
   lastAttack = 0;
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'enemy-turret');
     scene.add.existing(this);
@@ -13,6 +15,7 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
     this.setScale(2);
     this.setImmovable(true);
   }
+
   takeDamage(amount: number): void {
     this.hp -= amount;
     if (this.hp < 220) this.phase = 2;
@@ -21,11 +24,11 @@ class Boss extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-export class BossScene extends BaseLevelScene {
+export class BossScene extends BaseLevel {
   private boss!: Boss;
   private hpBar!: Phaser.GameObjects.Rectangle;
 
-  constructor() { super('BossScene'); }
+  constructor() { super(SCENES.Boss); }
 
   create(): void {
     this.createBase('char-0');
@@ -52,7 +55,7 @@ export class BossScene extends BaseLevelScene {
     this.hpBar.width = Phaser.Math.Clamp((this.boss.hp / 420) * 180, 0, 180);
     if (this.boss.hp <= 0) {
       runState.score += 5000;
-      this.scene.start('ResultsScene');
+      this.scene.start(SCENES.Results);
     }
   }
 }
